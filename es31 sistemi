@@ -1,0 +1,101 @@
+///esercizio 31 Arici-Cominotti
+
+#include <fstream>
+#include <iostream>
+#include <unistd.h>
+
+using namespace std;
+
+int main()
+{
+	char testo;
+	char y;
+	char k;
+	int x=10;
+	
+///gpio14
+	fstream gpio14;
+	gpio14.open("/sys/class/gpio/export",ios::out);
+	gpio14<<"14"<<endl;
+	gpio14.close();
+	gpio14.open("/sys/class/gpio/gpio14/direction",ios::out);
+	gpio14<<"in"<<endl;
+	gpio14.close();
+
+
+///gpio15
+	fstream gpio15;
+	gpio15.open("/sys/class/gpio/export",ios::out);
+	gpio15<<"15"<<endl;
+	gpio15.close();
+	gpio15.open("/sys/class/gpio/gpio15/direction",ios::out);
+	gpio15<<"in"<<endl;
+	gpio15.close();
+
+///gpio23
+	fstream gpio23;
+	gpio23.open("/sys/class/gpio/export",ios::out);
+	gpio23<<"23"<<endl;
+	gpio23.close();
+	gpio23.open("/sys/class/gpio/gpio23/direction",ios::out);
+	gpio23<<"out"<<endl;
+	gpio23.close();
+	
+
+
+///file sequenza
+	fstream sequenza;
+	sequenza.open("/home/pi/Desktop/Esercizi/Esatti/Es_31/sequenza.txt",ios::in);
+		 	
+	 	
+		gpio14>>y;
+		while (y=='0')
+		{
+			while(!sequenza.eof())
+			{
+				sequenza>>testo;
+				
+				gpio23.open("/sys/class/gpio/gpio23/value",ios::out);
+				gpio23<<testo<<endl;
+				gpio23.close();
+			
+				gpio15>>k;
+			
+				if (k!='0')
+			
+				{
+				
+					for (int i=0; i<x; i++)
+					{	
+						
+						gpio23.open("/sys/class/gpio/gpio23/value",ios::out);
+						usleep(100000);
+						gpio23.close();
+						
+						sequenza.seekg(0,ios::beg);
+						gpio15>>k;
+					
+						if (k=='0')
+						{
+							sequenza.seekg(0,ios::beg);
+							break;
+							
+						}
+						
+					
+					}
+					
+					sequenza.seekg(0,ios::end);
+				}
+
+			else sequenza.seekg(0,ios::beg);
+			
+			}
+			
+			gpio14>>y;
+
+		}
+
+	
+	
+}
