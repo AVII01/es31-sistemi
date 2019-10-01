@@ -88,7 +88,7 @@ int main()
 					sequenza.seekg(0,ios::end);
 				}
 
-			else sequenza.seekg(0,ios::beg);
+			else sequenza.seekg(0,ios::end);
 			
 			}
 			
